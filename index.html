@@ -260,6 +260,22 @@
       alert(`Berhasil! Menambahkan ${jmlHari} hari (Rp ${nominalTambahan.toLocaleString('id-ID')}) untuk ${name}.`);
     }
 
+    // --- NAVIGASI & LOGIN ---
+    document.getElementById("btn-to-login").addEventListener("click", () => {
+      const pass = prompt("Masukkan Password Keamanan Admin:");
+      if (pass === PASSWORD_ADMIN) {
+        document.getElementById("view-public").classList.add("hidden");
+        document.getElementById("view-admin").classList.remove("hidden");
+      } else if (pass !== null) {
+        alert("Password salah! Akses ditolak.");
+      }
+    });
+
+    document.getElementById("btn-to-public").addEventListener("click", () => {
+      document.getElementById("view-admin").classList.add("hidden");
+      document.getElementById("view-public").classList.remove("hidden");
+    });
+
     function formatRupiah(val) {
       return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(val);
     }
