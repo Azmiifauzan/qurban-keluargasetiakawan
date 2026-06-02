@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tabungan Qurban Keluarga Setiakawan</title>
+  <style>
+    :root {
+      --primary: #1b5e20;
+      --primary-light: #e8f5e9;
+      --gradient-start: #2e7d32;
+      --gradient-end: #155724;
+      --dark: #212529;
+      --gray: #6c757d;
+      --light-bg: #f8f9fa;
+      --success: #28a745;
+      --danger: #dc3545;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: '-apple-system', BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+    body { background-color: #eceff1; color: var(--dark); padding: 20px 15px; display: flex; justify-content: center; align-items: start; min-height: 100vh; }
+    
+    .app-container { background: white; width: 100%; max-width: 450px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); padding: 25px; position: relative; }
+    
+    /* Logo & Header */
+    .header { text-align: center; margin-bottom: 25px; }
+    .logo-wrapper { width: 85px; height: 85px; margin: 0 auto 12px; background: var(--primary-light); border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid var(--primary); box-shadow: 0 4px 10px rgba(0,0,0,0.05); overflow: hidden; }
+    .logo-placeholder { font-size: 38px; }
+    .logo-img { width: 100%; height: 100%; object-fit: cover; }
+    .header h1 { font-size: 22px; color: var(--primary); font-weight: 700; letter-spacing: -0.5px; }
+    .header p { font-size: 13px; color: var(--gray); margin-top: 2px; }
+
+    /* Card Saldo Utama */
+    .balance-card { background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end)); color: white; padding: 22px; border-radius: 16px; text-align: center; margin-bottom: 20px; box-shadow: 0 6px 20px rgba(46, 125, 50, 0.25); }
+    .balance-card span { font-size: 12px; opacity: 0.85; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600; }
+    .balance-card h2 { font-size: 34px; margin-top: 6px; font-weight: 700; }
+
+    /* Countdown Yellow Box */
+    .countdown-box { background: #fff9db; border: 1px solid #ffe3e3; padding: 12px; border-radius: 12px; text-align: center; margin-bottom: 25px; }
+    .countdown-box p { font-size: 11px; color: #f0a202; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; }
+    .countdown-box .timer { font-size: 14px; font-weight: 700; color: #b27b00; }
+
+    /* List Section */
+    .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding: 0 4px; }
+    .section-header h3 { font-size: 15px; font-weight: 700; color: var(--dark); }
+    .section-header .date-tag { font-size: 12px; color: var(--gray); font-weight: 500; }
+    
+    .member-list { list-style: none; }
+    .member-item { background: var(--light-bg); border: 1px solid #edf2f7; padding: 14px 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; transition: all 0.2s ease; }
+    .member-item:hover { background: #f1f3f5; transform: translateY(-1px); }
+    .member-name { font-weight: 600; font-size: 15px; color: #2d3748; }
+    
+    /* Badges & Buttons */
+    .status-badge { padding: 6px 14px; border-radius: 30px; font-size: 12px; font-weight: 700; display: inline-flex; align-items: center; }
+    .status-badge.success { background: #e6f4ea; color: var(--success); }
+    .status-badge.danger { background: #fce8e6; color: var(--danger); }
+    
+    .btn-block { background: #343a40; color: white; border: none; padding: 14px; width: 100%; border-radius: 12px; cursor: pointer; font-size: 14px; font-weight: 600; margin-top: 15px; transition: background 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .btn-block:hover { background: #212529; }
+    
+    .btn-action { background: var(--primary); padding: 7px 14px; border-radius: 8px; font-size: 12px; color: white; border: none; cursor: pointer; font-weight: 600; transition: opacity 0.2s; }
+    .btn-action:hover { opacity: 0.9; }
+    .btn-action:disabled { background: #ced4da; color: #6c757d; cursor: not-allowed; }
+    
+    .hidden { display: none; }
+    .loading-text { text-align: center; color: var(--gray); padding: 30px 0; font-size: 14px; font-style: italic; }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+    <div id="view-public">
+      <div class="header">
+        <div class="logo-wrapper">
+          <div class="logo-placeholder" id="logo-icon">🐄</div>
+        </div>
+        <h1>Keluarga Setiakawan</h1>
+        <p>Tabungan Qurban Harian • Rp 10.000 / Hari</p>
+      </div>
+
+      <div class="balance-card">
+        <span>Total Saldo Terkumpul</span>
+        <h2 id="total-saldo">Rp 0</h2>
+      </div>
+
+      <div class="countdown-box">
+        <p>Hitung Mundur H-7 Idul Adha 2027</p>
+        <div class="timer" id="countdown-timer">Menghitung...</div>
+      </div>
+
+      <div class="section-header">
+        <h3>Status Setoran</h3>
+        <span class="date-tag" id="current-date">--/--/----</span>
+      </div>
+
+      <div id="db-loading" class="loading-text">Menghubungkan ke database...</div>
+      <ul id="list-public" class="member-list"></ul>
+
+      <button class="btn-block" id="btn-to-login">🔑 Masuk Panel Admin</button>
+    </div>
+
+    <div id="view-admin" class="hidden">
+      <div class="header">
+        <h1>⚙️ Panel Admin</h1>
+        <p>Konfirmasi setoran harian anggota</p>
+      </div>
+      
+      <div style="margin-bottom: 20px; font-size: 13px; background: #e9ecef; padding: 12px; border-radius: 10px; text-align: center; color: #495057; line-height: 1.4;">
+        Uang masuk ke rekening admin? Klik <b>"Tandai Bayar"</b> untuk verifikasi Rp 10.000 hari ini.
+      </div>
+
+      <ul id="list-admin" class="member-list"></ul>
+
+      <button class="btn-block" style="background: #6c757d;" id="btn-to-public">🔙 Kembali ke Beranda</button>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, doc, setDoc, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    // =================================================================
+    // PASTE OBJEK FIREBASE CONFIG ANDA DI BAWAH INI
+    // =================================================================
+    const firebaseConfig = {
+      apiKey: "AIzaSyAp18CFhc_S2rLV6SAuUKRkOTZGjF06QrY",
+      authDomain: "nabung-qurban.firebaseapp.com",
+      projectId: "nabung-qurban",
+      storageBucket: "nabung-qurban.firebasestorage.app",
+      messagingSenderId: "919521574356",
+      appId: "1:919521574356:web:f4b569f8377b29fd97aa41",
+      measurementId: "G-T7QE7Z643J"
+    };
+
+    // Pengaturan Kunci & Target Waktu
+    const PASSWORD_ADMIN = "admin123"; // Ganti password admin di sini jika perlu
+    const TARGET_DATE = new Date("May 9, 2027 00:00:00").getTime(); 
+
+    // Init Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const docRef = doc(db, "qurban", "config_data");
+
+    // Set Tanggal Lokal di UI
+    document.getElementById('current-date').innerText = new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'short' });
+
+    // Struktur Data Default awal jika database masih kosong
+    const defaultStructure = {
+      totalSaldo: 0,
+      lastResetDate: new Date().toISOString().split('T')[0],
+      members: {
+        "1": { name: "Ayah", hasSavedToday: false },
+        "2": { name: "Ibu", hasSavedToday: false },
+        "3": { name: "Alesha", hasSavedToday: false },
+        "4": { name: "Ulid", hasSavedToday: false },
+        "5": { name: "Anisa", hasSavedToday: false }
+      }
+    };
+
+    let cloudData = {};
+
+    // REALTIME DATABASE LISTENER
+    onSnapshot(docRef, async (snapshot) => {
+      document.getElementById("db-loading").classList.add("hidden");
+      
+      if (!snapshot.exists()) {
+        await setDoc(docRef, defaultStructure);
+        return;
+      }
+
+      cloudData = snapshot.data();
+      
+      // Deteksi Ganti Hari Otomatis (Reset Status ke Belum Bayar)
+      const todayStr = new Date().toISOString().split('T')[0];
+      if (cloudData.lastResetDate !== todayStr) {
+        for (let id in cloudData.members) {
+          cloudData.members[id].hasSavedToday = false;
+        }
+        cloudData.lastResetDate = todayStr;
+        await setDoc(docRef, cloudData);
+        return;
+      }
+
+      updatePublicUI();
+      updateAdminUI();
+    });
+
+    function updatePublicUI() {
+      document.getElementById("total-saldo").innerText = formatRupiah(cloudData.totalSaldo);
+      const container = document.getElementById("list-public");
+      container.innerHTML = "";
+
+      Object.keys(cloudData.members).sort().forEach(id => {
+        const m = cloudData.members[id];
+        const badge = m.hasSavedToday 
+          ? `<span class="status-badge success">Sudah ✓</span>` 
+          : `<span class="status-badge danger">Belum ✗</span>`;
+        container.innerHTML += `<li class="member-item"><span class="member-name">${m.name}</span>${badge}</li>`;
+      });
+    }
+
+    function updateAdminUI() {
+      const container = document.getElementById("list-admin");
+      container.innerHTML = "";
+
+      Object.keys(cloudData.members).sort().forEach(id => {
+        const m = cloudData.members[id];
+        const actionBtn = m.hasSavedToday
+          ? `<button class="btn-action" disabled>Berhasil</button>`
+          : `<button class="btn-action" id="pay-click-${id}">Tandai Bayar</button>`;
+        container.innerHTML += `<li class="member-item"><span class="member-name">${m.name}</span>${actionBtn}</li>`;
+      });
+
+      Object.keys(cloudData.members).forEach(id => {
+        const btn = document.getElementById(`pay-click-${id}`);
+        if(btn) btn.addEventListener('click', () => processPayment(id));
+      });
+    }
+
+    async function processPayment(id) {
+      if (!cloudData.members[id].hasSavedToday) {
+        cloudData.members[id].hasSavedToday = true;
+        cloudData.totalSaldo += 10000;
+
+        await updateDoc(docRef, {
+          totalSaldo: cloudData.totalSaldo,
+          [`members.${id}.hasSavedToday`]: true
+        });
+      }
+    }
+
+    // Navigasi & Login Prompts
+    document.getElementById("btn-to-login").addEventListener("click", () => {
+      const pass = prompt("Masukkan Password Keamanan Admin:");
+      if (pass === PASSWORD_ADMIN) {
+        document.getElementById("view-public").classList.add("hidden");
+        document.getElementById("view-admin").classList.remove("hidden");
+      } else if (pass !== null) {
+        alert("Password salah! Akses ditolak.");
+      }
+    });
+
+    document.getElementById("btn-to-public").addEventListener("click", () => {
+      document.getElementById("view-admin").classList.add("hidden");
+      document.getElementById("view-public").classList.remove("hidden");
+    });
+
+    function formatRupiah(val) {
+      return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(val);
+    }
+
+    // COUNTDOWN SCRIPT
+    setInterval(() => {
+      const distance = TARGET_DATE - new Date().getTime();
+      if (distance < 0) {
+        document.getElementById("countdown-timer").innerHTML = "Waktu Qurban Tiba!";
+        return;
+      }
+      const d = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const h = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const s = Math.floor((distance % (1000 * 60)) / 1000);
+      document.getElementById("countdown-timer").innerHTML = `${d} hari ${h} jam ${m} menit ${s} detik`;
+    }, 1000);
+  </script>
+</body>
+</html>
