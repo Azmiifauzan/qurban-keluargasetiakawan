@@ -49,6 +49,8 @@
     .member-item { background: var(--light-bg); border: 1px solid #edf2f7; padding: 14px 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; transition: all 0.2s ease; }
     .member-item:hover { background: #f1f3f5; transform: translateY(-1px); }
     .member-name { font-weight: 600; font-size: 15px; color: #2d3748; }
+    .member-info-admin { display: flex; flex-direction: column; align-items: flex-start; }
+    .member-subtext { font-size: 11px; color: var(--success); font-weight: 600; margin-top: 2px; }
     
     /* Badges & Buttons */
     .status-badge { padding: 6px 14px; border-radius: 30px; font-size: 12px; font-weight: 700; display: inline-flex; align-items: center; }
@@ -60,7 +62,6 @@
     
     .btn-action { background: var(--primary); padding: 7px 14px; border-radius: 8px; font-size: 12px; color: white; border: none; cursor: pointer; font-weight: 600; transition: opacity 0.2s; }
     .btn-action:hover { opacity: 0.9; }
-    .btn-action:disabled { background: #ced4da; color: #6c757d; cursor: not-allowed; }
     
     .hidden { display: none; }
     .loading-text { text-align: center; color: var(--gray); padding: 30px 0; font-size: 14px; font-style: italic; }
@@ -106,7 +107,7 @@
       </div>
       
       <div style="margin-bottom: 20px; font-size: 13px; background: #e9ecef; padding: 12px; border-radius: 10px; text-align: center; color: #495057; line-height: 1.4;">
-        Uang masuk ke rekening admin? Klik <b>"Tandai Bayar"</b> untuk verifikasi Rp 10.000 hari ini.
+        Klik <b>"Input Setoran"</b> untuk memasukkan jumlah hari bayar anggota (bisa untuk satu hari atau banyak hari sekaligus).
       </div>
 
       <ul id="list-admin" class="member-list"></ul>
@@ -133,7 +134,7 @@
     };
 
     // Pengaturan Kunci & Target Waktu
-    const PASSWORD_ADMIN = "admin123"; // Ganti password admin di sini jika perlu
+    const PASSWORD_ADMIN = "admin123"; 
     const TARGET_DATE = new Date("May 9, 2027 00:00:00").getTime(); 
 
     // Init Firebase
@@ -141,19 +142,18 @@
     const db = getFirestore(app);
     const docRef = doc(db, "qurban", "config_data");
 
-    // Set Tanggal Lokal di UI
     document.getElementById('current-date').innerText = new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'short' });
 
-    // Struktur Data Default awal jika database masih kosong
+    // Struktur Data Menggunakan Hitungan Sisa Hari Lunas
     const defaultStructure = {
       totalSaldo: 0,
       lastResetDate: new Date().toISOString().split('T')[0],
       members: {
-        "1": { name: "Ayah", hasSavedToday: false },
-        "2": { name: "Ibu", hasSavedToday: false },
-        "3": { name: "Alesha", hasSavedToday: false },
-        "4": { name: "Ulid", hasSavedToday: false },
-        "5": { name: "Anisa", hasSavedToday: false }
+        "1": { name: "Ayah", sisaHariLunas: 0 },
+        "2": { name: "Ibu", sisaHariLunas: 0 },
+        "3": { name: "Alesha", sisaHariLunas: 0 },
+        "4": { name: "Ulid", sisaHariLunas: 0 },
+        "5": { name: "Anisa", sisaHariLunas: 0 }
       }
     };
 
@@ -170,11 +170,18 @@
 
       cloudData = snapshot.data();
       
-      // Deteksi Ganti Hari Otomatis (Reset Status ke Belum Bayar)
+      // Deteksi Ganti Hari Otomatis & Pemotongan Sisa Hari Lunas secara Akurat
       const todayStr = new Date().toISOString().split('T')[0];
       if (cloudData.lastResetDate !== todayStr) {
-        for (let id in cloudData.members) {
-          cloudData.members[id].hasSavedToday = false;
+        const date1 = new Date(cloudData.lastResetDate);
+        const date2 = new Date(todayStr);
+        const diffDays = Math.round((date2 - date1) / (1000 * 60 * 60 * 24));
+        
+        if (diffDays > 0) {
+          for (let id in cloudData.members) {
+            let sisa = cloudData.members[id].sisaHariLunas || 0;
+            cloudData.members[id].sisaHariLunas = Math.max(0, sisa - diffDays);
+          }
         }
         cloudData.lastResetDate = todayStr;
         await setDoc(docRef, cloudData);
@@ -192,8 +199,9 @@
 
       Object.keys(cloudData.members).sort().forEach(id => {
         const m = cloudData.members[id];
-        const badge = m.hasSavedToday 
-          ? `<span class="status-badge success">Sudah ✓</span>` 
+        const isLunas = (m.sisaHariLunas && m.sisaHariLunas > 0);
+        const badge = isLunas 
+          ? `<span class="status-badge success">Sudah ✓ ${m.sisaHariLunas > 1 ? '(' + m.sisaHariLunas + ' hr)' : ''}</span>` 
           : `<span class="status-badge danger">Belum ✗</span>`;
         container.innerHTML += `<li class="member-item"><span class="member-name">${m.name}</span>${badge}</li>`;
       });
@@ -205,10 +213,18 @@
 
       Object.keys(cloudData.members).sort().forEach(id => {
         const m = cloudData.members[id];
-        const actionBtn = m.hasSavedToday
-          ? `<button class="btn-action" disabled>Berhasil</button>`
-          : `<button class="btn-action" id="pay-click-${id}">Tandai Bayar</button>`;
-        container.innerHTML += `<li class="member-item"><span class="member-name">${m.name}</span>${actionBtn}</li>`;
+        const isLunas = (m.sisaHariLunas && m.sisaHariLunas > 0);
+        const textSisa = isLunas ? `<span class="member-subtext">Lunas sisa ${m.sisaHariLunas} hari kedepan</span>` : `<span class="member-subtext" style="color:#dc3545">Belum ada deposit hari</span>`;
+        const actionBtn = `<button class="btn-action" id="pay-click-${id}">Input Setoran</button>`;
+        
+        container.innerHTML += `
+          <li class="member-item">
+            <div class="member-info-admin">
+              <span class="member-name">${m.name}</span>
+              ${textSisa}
+            </div>
+            ${actionBtn}
+          </li>`;
       });
 
       Object.keys(cloudData.members).forEach(id => {
@@ -217,33 +233,32 @@
       });
     }
 
+    // PROSES INPUT SETORAN OLEH ADMIN (MENDUKUNG MULTI-DAY)
     async function processPayment(id) {
-      if (!cloudData.members[id].hasSavedToday) {
-        cloudData.members[id].hasSavedToday = true;
-        cloudData.totalSaldo += 10000;
-
-        await updateDoc(docRef, {
-          totalSaldo: cloudData.totalSaldo,
-          [`members.${id}.hasSavedToday`]: true
-        });
+      const name = cloudData.members[id].name;
+      const inputHari = prompt(`Masukkan jumlah hari setoran untuk ${name}:\n\nKetik 1 = Rp 10.000 (1 hari)\nKetik 5 = Rp 50.000 (5 hari)\nKetik 30 = Rp 300.000 (30 hari), dll.`, "1");
+      
+      if (inputHari === null) return; 
+      
+      const jmlHari = parseInt(inputHari);
+      if (isNaN(jmlHari) || jmlHari <= 0) {
+        alert("Gagal: Input harus berupa angka bulat di atas 0!");
+        return;
       }
+
+      const nominalTambahan = jmlHari * 10000;
+      let sisaSekarang = cloudData.members[id].sisaHariLunas || 0;
+      
+      cloudData.members[id].sisaHariLunas = sisaSekarang + jmlHari;
+      cloudData.totalSaldo += nominalTambahan;
+
+      await updateDoc(docRef, {
+        totalSaldo: cloudData.totalSaldo,
+        [`members.${id}.sisaHariLunas`]: cloudData.members[id].sisaHariLunas
+      });
+      
+      alert(`Berhasil! Menambahkan ${jmlHari} hari (Rp ${nominalTambahan.toLocaleString('id-ID')}) untuk ${name}.`);
     }
-
-    // Navigasi & Login Prompts
-    document.getElementById("btn-to-login").addEventListener("click", () => {
-      const pass = prompt("Masukkan Password Keamanan Admin:");
-      if (pass === PASSWORD_ADMIN) {
-        document.getElementById("view-public").classList.add("hidden");
-        document.getElementById("view-admin").classList.remove("hidden");
-      } else if (pass !== null) {
-        alert("Password salah! Akses ditolak.");
-      }
-    });
-
-    document.getElementById("btn-to-public").addEventListener("click", () => {
-      document.getElementById("view-admin").classList.add("hidden");
-      document.getElementById("view-public").classList.remove("hidden");
-    });
 
     function formatRupiah(val) {
       return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(val);
