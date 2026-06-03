@@ -97,7 +97,7 @@
 
       <div class="balance-card">
         <span>Total Saldo Terkumpul</span>
-        <h2 id="total-saldo">Rp 0 /Rp 27.000.000</h2>
+        <h2 id="total-saldo">Rp 0</h2>
       </div>
 
       <div class="section-header">
@@ -172,7 +172,7 @@
 
     // RENDER PUBLIK
     function updatePublicUI() {
-      document.getElementById("total-saldo").innerText = formatRupiah(cloudData.totalSaldo);
+      document.getElementById("total-saldo").innerText = formatRupiah(cloudData.totalSaldo) + " / Rp 27.000.000";
       const container = document.getElementById("list-public");
       container.innerHTML = "";
 
