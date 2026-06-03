@@ -15,56 +15,72 @@
       --light-bg: #f8f9fa;
       --success: #28a745;
       --danger: #dc3545;
+      --warning: #f39c12;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: '-apple-system', BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
     body { background-color: #eceff1; color: var(--dark); padding: 20px 15px; display: flex; justify-content: center; align-items: start; min-height: 100vh; }
     
-    .app-container { background: white; width: 100%; max-width: 450px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); padding: 25px; position: relative; }
+    .app-container { background: white; width: 100%; max-width: 480px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); padding: 25px; position: relative; }
     
-    /* Logo & Header */
+    /* Header & Balance */
     .header { text-align: center; margin-bottom: 25px; }
-    .logo-wrapper { width: 85px; height: 85px; margin: 0 auto 12px; background: var(--primary-light); border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid var(--primary); box-shadow: 0 4px 10px rgba(0,0,0,0.05); overflow: hidden; }
-    .logo-placeholder { font-size: 38px; }
+    .logo-wrapper { width: 85px; height: 85px; margin: 0 auto 12px; background: var(--primary-light); border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid var(--primary); overflow: hidden; }
     .logo-img { width: 100%; height: 100%; object-fit: cover; }
     .header h1 { font-size: 22px; color: var(--primary); font-weight: 700; letter-spacing: -0.5px; }
     .header p { font-size: 13px; color: var(--gray); margin-top: 2px; }
 
-    /* Card Saldo Utama */
     .balance-card { background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end)); color: white; padding: 22px; border-radius: 16px; text-align: center; margin-bottom: 20px; box-shadow: 0 6px 20px rgba(46, 125, 50, 0.25); }
     .balance-card span { font-size: 12px; opacity: 0.85; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600; }
     .balance-card h2 { font-size: 34px; margin-top: 6px; font-weight: 700; }
 
-    /* Countdown Yellow Box */
-    .countdown-box { background: #fff9db; border: 1px solid #ffe3e3; padding: 12px; border-radius: 12px; text-align: center; margin-bottom: 25px; }
-    .countdown-box p { font-size: 11px; color: #f0a202; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; }
-    .countdown-box .timer { font-size: 14px; font-weight: 700; color: #b27b00; }
-
-    /* List Section */
+    /* Member List & Mini Calendar */
     .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding: 0 4px; }
     .section-header h3 { font-size: 15px; font-weight: 700; color: var(--dark); }
-    .section-header .date-tag { font-size: 12px; color: var(--gray); font-weight: 500; }
     
     .member-list { list-style: none; }
-    .member-item { background: var(--light-bg); border: 1px solid #edf2f7; padding: 14px 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; transition: all 0.2s ease; }
-    .member-item:hover { background: #f1f3f5; transform: translateY(-1px); }
-    .member-name { font-weight: 600; font-size: 15px; color: #2d3748; }
-    .member-info-admin { display: flex; flex-direction: column; align-items: flex-start; }
-    .member-subtext { font-size: 11px; color: var(--success); font-weight: 600; margin-top: 2px; }
+    .member-item { background: var(--light-bg); border: 1px solid #edf2f7; padding: 16px; border-radius: 14px; margin-bottom: 12px; display: flex; flex-direction: column; transition: all 0.2s ease; }
+    .member-main { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+    .member-name { font-weight: 600; font-size: 16px; color: #2d3748; }
     
-    /* Badges & Buttons */
-    .status-badge { padding: 6px 14px; border-radius: 30px; font-size: 12px; font-weight: 700; display: inline-flex; align-items: center; }
+    .status-badge { padding: 6px 14px; border-radius: 30px; font-size: 12px; font-weight: 700; }
     .status-badge.success { background: #e6f4ea; color: var(--success); }
     .status-badge.danger { background: #fce8e6; color: var(--danger); }
     
-    .btn-block { background: #343a40; color: white; border: none; padding: 14px; width: 100%; border-radius: 12px; cursor: pointer; font-size: 14px; font-weight: 600; margin-top: 15px; transition: background 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
-    .btn-block:hover { background: #212529; }
+    .mini-calendar { display: flex; justify-content: space-between; margin-top: 15px; padding-top: 15px; border-top: 1px dashed #ced4da; cursor: pointer; }
+    .mini-day { width: 38px; height: 38px; border-radius: 10px; background: #e9ecef; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: var(--gray); border: 2px solid transparent; transition: transform 0.2s; }
+    .mini-day span { font-size: 9px; font-weight: 500; text-transform: uppercase; margin-bottom: 2px; }
+    .mini-day.paid { background: var(--success); color: white; box-shadow: 0 4px 10px rgba(40, 167, 69, 0.3); }
+    .mini-day.today { border-color: var(--primary); background: #e8f5e9; color: var(--primary); }
+    .mini-day.paid.today { background: var(--success); color: white; border-color: #1e7e34; }
+    .mini-calendar:hover .mini-day { transform: translateY(-2px); }
     
-    .btn-action { background: var(--primary); padding: 7px 14px; border-radius: 8px; font-size: 12px; color: white; border: none; cursor: pointer; font-weight: 600; transition: opacity 0.2s; }
-    .btn-action:hover { opacity: 0.9; }
+    /* Full Calendar Modal */
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 999; display: flex; justify-content: center; align-items: center; padding: 20px; backdrop-filter: blur(4px); }
+    .modal-content { background: white; width: 100%; max-width: 380px; border-radius: 20px; padding: 25px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
+    .modal-title { text-align: center; font-size: 18px; color: var(--primary); font-weight: 700; margin-bottom: 5px; }
+    .modal-subtitle { text-align: center; font-size: 13px; color: var(--gray); margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px; }
+    .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+    .cal-header { font-size: 11px; font-weight: 700; color: var(--gray); text-align: center; padding-bottom: 5px; }
+    .cal-cell { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; background: #f8f9fa; border-radius: 8px; font-size: 13px; font-weight: 600; color: var(--dark); border: 1px solid #edf2f7; }
+    .cal-cell.paid { background: var(--success); color: white; border-color: var(--success); }
+    .cal-cell.today { border: 2px solid var(--primary); color: var(--primary); }
+    .cal-cell.paid.today { border-color: #1e7e34; }
+    .cal-cell.empty { background: transparent; border: none; }
     
-    .hidden { display: none; }
-    .loading-text { text-align: center; color: var(--gray); padding: 30px 0; font-size: 14px; font-style: italic; }
+    /* Buttons */
+    .btn-block { background: #343a40; color: white; border: none; padding: 14px; width: 100%; border-radius: 12px; cursor: pointer; font-size: 15px; font-weight: 600; margin-top: 20px; }
+    .btn-close { background: #e9ecef; color: var(--dark); margin-top: 25px; }
+    
+    .admin-actions { display: flex; gap: 8px; margin-top: 15px; width: 100%; }
+    .btn-action { padding: 8px; border-radius: 8px; font-size: 12px; color: white; border: none; cursor: pointer; font-weight: 600; flex: 1; transition: opacity 0.2s; }
+    .btn-action:hover { opacity: 0.8; }
+    .btn-pay { background: var(--primary); flex: 2; }
+    .btn-edit { background: var(--warning); }
+    .btn-delete { background: var(--danger); }
+    
+    .hidden { display: none !important; }
+    .loading-text { text-align: center; color: var(--gray); padding: 30px 0; font-style: italic; }
   </style>
 </head>
 <body>
@@ -73,7 +89,7 @@
     <div id="view-public">
       <div class="header">
         <div class="logo-wrapper">
-          <img src="logo.png" class="logo-img" alt="Logo Keluarga">
+          <img src="logo-keluarga.png" class="logo-img" alt="Logo">
         </div>
         <h1>Keluarga Setiakawan</h1>
         <p>Tabungan Qurban Harian • Rp 10.000 / Hari</p>
@@ -84,14 +100,9 @@
         <h2 id="total-saldo">Rp 0</h2>
       </div>
 
-      <div class="countdown-box">
-        <p>Hitung Mundur H-7 Idul Adha 2027</p>
-        <div class="timer" id="countdown-timer">Menghitung...</div>
-      </div>
-
       <div class="section-header">
         <h3>Status Setoran</h3>
-        <span class="date-tag" id="current-date">--/--/----</span>
+        <span style="font-size:12px; color:#6c757d;">Klik kalender untuk detail</span>
       </div>
 
       <div id="db-loading" class="loading-text">Menghubungkan ke database...</div>
@@ -103,12 +114,10 @@
     <div id="view-admin" class="hidden">
       <div class="header">
         <h1>⚙️ Panel Admin</h1>
-        <p>Konfirmasi setoran harian anggota</p>
+        <p>Kelola Anggota & Saldo</p>
       </div>
       
-      <div style="margin-bottom: 20px; font-size: 13px; background: #e9ecef; padding: 12px; border-radius: 10px; text-align: center; color: #495057; line-height: 1.4;">
-        Klik <b>"Input Setoran"</b> untuk memasukkan jumlah hari bayar anggota (bisa untuk satu hari atau banyak hari sekaligus).
-      </div>
+      <button class="btn-block" style="background: var(--success); margin-top: 0; margin-bottom: 20px;" onclick="addMember()">➕ Tambah Anggota Baru</button>
 
       <ul id="list-admin" class="member-list"></ul>
 
@@ -116,12 +125,17 @@
     </div>
   </div>
 
+  <div id="calendar-modal" class="modal-overlay hidden">
+    <div class="modal-content" id="modal-body">
+      </div>
+  </div>
+
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, doc, setDoc, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     // =================================================================
-    // PASTE OBJEK FIREBASE CONFIG ANDA DI BAWAH INI
+    // PASTE FIREBASE CONFIG KAMU DI SINI
     // =================================================================
     const firebaseConfig = {
       apiKey: "AIzaSyAp18CFhc_S2rLV6SAuUKRkOTZGjF06QrY",
@@ -133,67 +147,30 @@
       measurementId: "G-T7QE7Z643J"
     };
 
-    // Pengaturan Kunci & Target Waktu
     const PASSWORD_ADMIN = "admin123"; 
-    const TARGET_DATE = new Date("May 9, 2027 00:00:00").getTime(); 
 
-    // Init Firebase
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     const docRef = doc(db, "qurban", "config_data");
 
-    document.getElementById('current-date').innerText = new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'short' });
-
-    // Struktur Data Menggunakan Hitungan Sisa Hari Lunas
-    const defaultStructure = {
-      totalSaldo: 0,
-      lastResetDate: new Date().toISOString().split('T')[0],
-      members: {
-        "1": { name: "Ayah", sisaHariLunas: 0 },
-        "2": { name: "Ibu", sisaHariLunas: 0 },
-        "3": { name: "Alesha", sisaHariLunas: 0 },
-        "4": { name: "Ulid", sisaHariLunas: 0 },
-        "5": { name: "Anisa", sisaHariLunas: 0 },
-        "6": { name: "Kak Yanah", sisaHariLunas: 0},
-        "7": { name: "Azmii", sisaHariLunas: 0}
-      }
-    };
+    function getLocalDateString(d) {
+      return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,'0') + "-" + String(d.getDate()).padStart(2,'0');
+    }
+    const dayNamesMini = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
+    const todayStr = getLocalDateString(new Date());
 
     let cloudData = {};
 
-    // REALTIME DATABASE LISTENER
-    onSnapshot(docRef, async (snapshot) => {
+    onSnapshot(docRef, (snapshot) => {
       document.getElementById("db-loading").classList.add("hidden");
-      
-      if (!snapshot.exists()) {
-        await setDoc(docRef, defaultStructure);
-        return;
+      if (snapshot.exists()) {
+        cloudData = snapshot.data();
+        updatePublicUI();
+        updateAdminUI();
       }
-
-      cloudData = snapshot.data();
-      
-      // Deteksi Ganti Hari Otomatis & Pemotongan Sisa Hari Lunas secara Akurat
-      const todayStr = new Date().toISOString().split('T')[0];
-      if (cloudData.lastResetDate !== todayStr) {
-        const date1 = new Date(cloudData.lastResetDate);
-        const date2 = new Date(todayStr);
-        const diffDays = Math.round((date2 - date1) / (1000 * 60 * 60 * 24));
-        
-        if (diffDays > 0) {
-          for (let id in cloudData.members) {
-            let sisa = cloudData.members[id].sisaHariLunas || 0;
-            cloudData.members[id].sisaHariLunas = Math.max(0, sisa - diffDays);
-          }
-        }
-        cloudData.lastResetDate = todayStr;
-        await setDoc(docRef, cloudData);
-        return;
-      }
-
-      updatePublicUI();
-      updateAdminUI();
     });
 
+    // RENDER PUBLIK
     function updatePublicUI() {
       document.getElementById("total-saldo").innerText = formatRupiah(cloudData.totalSaldo);
       const container = document.getElementById("list-public");
@@ -201,100 +178,163 @@
 
       Object.keys(cloudData.members).sort().forEach(id => {
         const m = cloudData.members[id];
-        const isLunas = (m.sisaHariLunas && m.sisaHariLunas > 0);
-        const badge = isLunas 
-          ? `<span class="status-badge success">Sudah ✓ ${m.sisaHariLunas > 1 ? '(' + m.sisaHariLunas + ' hr)' : ''}</span>` 
+        const isPaidToday = m.paidDates && m.paidDates.includes(todayStr);
+        const badge = isPaidToday 
+          ? `<span class="status-badge success">Sudah ✓</span>` 
           : `<span class="status-badge danger">Belum ✗</span>`;
-        container.innerHTML += `<li class="member-item"><span class="member-name">${m.name}</span>${badge}</li>`;
+
+        container.innerHTML += `
+          <li class="member-item">
+            <div class="member-main">
+              <span class="member-name">${m.name}</span>
+              ${badge}
+            </div>
+            ${buildMiniCalendar(m, id)}
+          </li>`;
       });
     }
 
+    // RENDER ADMIN DENGAN TOMBOL CRUD
     function updateAdminUI() {
       const container = document.getElementById("list-admin");
       container.innerHTML = "";
 
       Object.keys(cloudData.members).sort().forEach(id => {
         const m = cloudData.members[id];
-        const isLunas = (m.sisaHariLunas && m.sisaHariLunas > 0);
-        const textSisa = isLunas ? `<span class="member-subtext">Lunas sisa ${m.sisaHariLunas} hari kedepan</span>` : `<span class="member-subtext" style="color:#dc3545">Belum ada deposit hari</span>`;
-        const actionBtn = `<button class="btn-action" id="pay-click-${id}">Input Setoran</button>`;
-        
         container.innerHTML += `
           <li class="member-item">
-            <div class="member-info-admin">
+            <div class="member-main">
               <span class="member-name">${m.name}</span>
-              ${textSisa}
             </div>
-            ${actionBtn}
+            <div class="admin-actions">
+              <button class="btn-action btn-pay" onclick="processPayment('${id}')">Setor</button>
+              <button class="btn-action btn-edit" onclick="editMember('${id}')">✏️ Edit</button>
+              <button class="btn-action btn-delete" onclick="deleteMember('${id}')">🗑️ Hapus</button>
+            </div>
           </li>`;
       });
-
-      Object.keys(cloudData.members).forEach(id => {
-        const btn = document.getElementById(`pay-click-${id}`);
-        if(btn) btn.addEventListener('click', () => processPayment(id));
-      });
     }
 
-    // PROSES INPUT SETORAN OLEH ADMIN (MENDUKUNG MULTI-DAY)
-    async function processPayment(id) {
-      const name = cloudData.members[id].name;
-      const inputHari = prompt(`Masukkan jumlah hari setoran untuk ${name}:\n\nKetik 1 = Rp 10.000 (1 hari)\nKetik 5 = Rp 50.000 (5 hari)\nKetik 30 = Rp 300.000 (30 hari), dll.`, "1");
-      
-      if (inputHari === null) return; 
-      
-      const jmlHari = parseInt(inputHari);
-      if (isNaN(jmlHari) || jmlHari <= 0) {
-        alert("Gagal: Input harus berupa angka bulat di atas 0!");
-        return;
+    // GENERATOR MINI CALENDAR (5 HARI)
+    window.buildMiniCalendar = function(member, id) {
+      const now = new Date();
+      let html = `<div class="mini-calendar" onclick="openFullCalendar('${id}')" title="Klik untuk lihat bulan ini">`;
+      for(let i = -2; i <= 2; i++) {
+        let d = new Date();
+        d.setDate(now.getDate() + i);
+        let dStr = getLocalDateString(d);
+        let isPaid = member.paidDates && member.paidDates.includes(dStr);
+        let isToday = i === 0;
+
+        let classes = "mini-day";
+        if(isPaid) classes += " paid";
+        if(isToday) classes += " today";
+
+        html += `<div class="${classes}"><span>${dayNamesMini[d.getDay()]}</span>${isPaid ? '✓' : d.getDate()}</div>`;
       }
-
-      const nominalTambahan = jmlHari * 10000;
-      let sisaSekarang = cloudData.members[id].sisaHariLunas || 0;
-      
-      cloudData.members[id].sisaHariLunas = sisaSekarang + jmlHari;
-      cloudData.totalSaldo += nominalTambahan;
-
-      await updateDoc(docRef, {
-        totalSaldo: cloudData.totalSaldo,
-        [`members.${id}.sisaHariLunas`]: cloudData.members[id].sisaHariLunas
-      });
-      
-      alert(`Berhasil! Menambahkan ${jmlHari} hari (Rp ${nominalTambahan.toLocaleString('id-ID')}) untuk ${name}.`);
+      html += `</div>`;
+      return html;
     }
 
-    // --- NAVIGASI & LOGIN ---
+    // GENERATOR FULL CALENDAR (MODAL)
+    window.openFullCalendar = function(id) {
+      const member = cloudData.members[id];
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = now.getMonth();
+      
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+      const firstDayIndex = new Date(year, month, 1).getDay(); 
+
+      let html = `<div class="modal-title">${member.name}</div>`;
+      html += `<div class="modal-subtitle">${now.toLocaleDateString('id-ID', {month:'long', year:'numeric'})}</div>`;
+      
+      html += `<div class="calendar-grid">`;
+      dayNamesMini.forEach(d => html += `<div class="cal-header">${d}</div>`);
+
+      for(let i=0; i<firstDayIndex; i++) html += `<div class="cal-cell empty"></div>`;
+
+      for(let d=1; d<=daysInMonth; d++) {
+        const dStr = getLocalDateString(new Date(year, month, d));
+        const isPaid = member.paidDates && member.paidDates.includes(dStr);
+        let classes = `cal-cell ${isPaid ? 'paid' : ''} ${dStr === todayStr ? 'today' : ''}`;
+        html += `<div class="${classes}">${isPaid ? '✓' : d}</div>`;
+      }
+      
+      html += `</div><button class="btn-block btn-close" onclick="closeCalendar()">Tutup Kalender</button>`;
+
+      document.getElementById('modal-body').innerHTML = html;
+      document.getElementById('calendar-modal').classList.remove('hidden');
+    }
+
+    window.closeCalendar = function() { document.getElementById('calendar-modal').classList.add('hidden'); }
+
+    // FITUR: INPUT SETORAN
+    window.processPayment = async function(id) {
+      const member = cloudData.members[id];
+      const inputHari = prompt(`Berapa hari setoran untuk ${member.name}?\n1 = Rp 10rb, 5 = Rp 50rb`, "1");
+      
+      if (!inputHari) return; 
+      const jmlHari = parseInt(inputHari);
+      if (isNaN(jmlHari) || jmlHari <= 0) return;
+
+      if(!member.paidDates) member.paidDates = [];
+      let added = 0, checkDate = new Date();
+
+      while(added < jmlHari) {
+        let dStr = getLocalDateString(checkDate);
+        if(!member.paidDates.includes(dStr)) {
+          member.paidDates.push(dStr);
+          added++;
+        }
+        checkDate.setDate(checkDate.getDate() + 1); 
+      }
+      cloudData.totalSaldo += (jmlHari * 10000);
+      await updateDoc(docRef, { totalSaldo: cloudData.totalSaldo, [`members.${id}.paidDates`]: member.paidDates });
+    }
+
+    // FITUR: TAMBAH ANGGOTA
+    window.addMember = async function() {
+      const newName = prompt("Masukkan nama anggota baru:");
+      if(newName && newName.trim() !== "") {
+        const newId = "user_" + Date.now();
+        await updateDoc(docRef, { [`members.${newId}`]: { name: newName.trim(), paidDates: [] } });
+      }
+    };
+
+    // FITUR: EDIT NAMA
+    window.editMember = async function(id) {
+      const oldName = cloudData.members[id].name;
+      const newName = prompt("Ubah nama anggota:", oldName);
+      if(newName && newName.trim() !== "" && newName !== oldName) {
+        await updateDoc(docRef, { [`members.${id}.name`]: newName.trim() });
+      }
+    };
+
+    // FITUR: HAPUS ANGGOTA
+    window.deleteMember = async function(id) {
+      const name = cloudData.members[id].name;
+      if(confirm(`HAPUS ANGGOTA:\nYakin ingin menghapus ${name} dari daftar?\n\n(Catatan: Total Saldo keseluruhan sengaja tidak dikurangi otomatis agar uang kas di bank tetap klop dengan catatan web)`)) {
+        const updatedMembers = { ...cloudData.members };
+        delete updatedMembers[id];
+        await updateDoc(docRef, { members: updatedMembers });
+      }
+    };
+
+    function formatRupiah(val) { return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(val); }
+
+    // NAVIGASI LOGIN
     document.getElementById("btn-to-login").addEventListener("click", () => {
-      const pass = prompt("Masukkan Password Keamanan Admin:");
+      const pass = prompt("Masukkan Password Admin:");
       if (pass === PASSWORD_ADMIN) {
         document.getElementById("view-public").classList.add("hidden");
         document.getElementById("view-admin").classList.remove("hidden");
-      } else if (pass !== null) {
-        alert("Password salah! Akses ditolak.");
-      }
+      } else if (pass !== null) alert("Password salah!");
     });
-
     document.getElementById("btn-to-public").addEventListener("click", () => {
       document.getElementById("view-admin").classList.add("hidden");
       document.getElementById("view-public").classList.remove("hidden");
     });
-
-    function formatRupiah(val) {
-      return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(val);
-    }
-
-    // COUNTDOWN SCRIPT
-    setInterval(() => {
-      const distance = TARGET_DATE - new Date().getTime();
-      if (distance < 0) {
-        document.getElementById("countdown-timer").innerHTML = "Waktu Qurban Tiba!";
-        return;
-      }
-      const d = Math.floor(distance / (1000 * 60 * 60 * 24));
-      const h = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-      const s = Math.floor((distance % (1000 * 60)) / 1000);
-      document.getElementById("countdown-timer").innerHTML = `${d} hari ${h} jam ${m} menit ${s} detik`;
-    }, 1000);
   </script>
 </body>
 </html>
