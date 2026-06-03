@@ -269,7 +269,7 @@
 
     window.closeCalendar = function() { document.getElementById('calendar-modal').classList.add('hidden'); }
 
-    // FITUR: INPUT SETORAN
+    // FITUR: INPUT SETORAN (BISA MUNDUR / BACKDATE)
     window.processPayment = async function(id) {
       const member = cloudData.members[id];
       const inputHari = prompt(`Berapa hari setoran untuk ${member.name}?\n1 = Rp 10rb, 5 = Rp 50rb`, "1");
@@ -278,9 +278,23 @@
       const jmlHari = parseInt(inputHari);
       if (isNaN(jmlHari) || jmlHari <= 0) return;
 
-      if(!member.paidDates) member.paidDates = [];
-      let added = 0, checkDate = new Date();
+      // Fitur baru: Tanya tanggal mulai
+      const inputTgl = prompt(`Mulai bayar dari tanggal berapa?\nFormat: YYYY-MM-DD\n\n(Biarkan apa adanya jika ingin mulai dari HARI INI):`, todayStr);
+      if (inputTgl === null) return;
 
+      let checkDate = new Date(); // Default hari ini
+      if (inputTgl.trim() !== "") {
+        let parts = inputTgl.split("-");
+        if(parts.length === 3) {
+          // Set tanggal mundur/maju sesuai input admin
+          checkDate = new Date(parts[0], parts[1] - 1, parts[2]);
+        }
+      }
+
+      if(!member.paidDates) member.paidDates = [];
+      let added = 0;
+
+      // Loop mencari hari kosong mulai dari tanggal yang ditentukan
       while(added < jmlHari) {
         let dStr = getLocalDateString(checkDate);
         if(!member.paidDates.includes(dStr)) {
@@ -289,10 +303,10 @@
         }
         checkDate.setDate(checkDate.getDate() + 1); 
       }
+      
       cloudData.totalSaldo += (jmlHari * 10000);
       await updateDoc(docRef, { totalSaldo: cloudData.totalSaldo, [`members.${id}.paidDates`]: member.paidDates });
     }
-
     // FITUR: TAMBAH ANGGOTA
     window.addMember = async function() {
       const newName = prompt("Masukkan nama anggota baru:");
